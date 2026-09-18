@@ -42,19 +42,35 @@ Maintain a thin, updateable Parlant fork where upstream stays easy to absorb and
 - `scripts/mnnz_fork_status.py` reports exact upstream/fork SHAs, working-tree overlay, upstream-source delta and core-delta alarm.
 - upstream-core patch inventory remains empty.
 
-## Current DoD
+## Current DoD — reusable sales profile
 
-1. Keep upstream-core delta at zero for the first FCM integration slice.
-2. Prove the fork-owned FCM profile against a live Parlant runtime.
-3. Prove the anti-drift report sees both committed and uncommitted overlay files.
-4. Run lightweight downstream tests, Python compile, PowerShell parse, Ruff, fork-status and `git diff --check`.
-5. Merge the exact green feature commit into `dev` and push only the fork.
-6. Keep `main` unchanged.
+1. Keep upstream-core delta at zero.
+2. Maintain the reusable sales profile under `mnnz/sales` using public Parlant REST/SDK concepts only.
+3. Provision bounded Guidelines + Journey from canonical offer truth and run the versioned `ultra_vacancy_baseline.json` replay in one session.
+4. Deterministically reject invented pricing, invented departments/handoffs, unsupported capabilities, renewed call pressure and terminal-sale resurrection.
+5. Make the replay resilient to slow Parlant event POSTs and transient `GET /events` poll timeouts without retrying side-effectful POSTs blindly.
+6. Record matched Guidelines/Journey and per-turn latency.
+7. Require Ruff + compile + downstream unit regressions + fork-status + `git diff --check` + full live replay PASS before merge.
+8. Merge the exact green feature commit into `dev` with ff-only and push only the fork; keep `main` unchanged.
+
+## Current live evidence / corrections
+
+- Seven sales Guidelines + one Journey provision successfully through public APIs; no `src/parlant` modification is required.
+- Accepted live session: `bO1hJ35eva`.
+- Exact captured turn latencies: `113.705 / 27.140 / 86.791 / 56.265 s`.
+- Strengthened unknown-pricing behavior is GREEN: no invented price, no invented sales-team handoff, one asynchronous scope question.
+- Unsupported cold-call/training request is GREEN and explicit denial is no longer misclassified as an affirmative capability claim.
+- CRM problem-first turn is GREEN: bounded audit/routing first step plus one focused async question.
+- Terminal-stop turn is GREEN: sale stops without resurrection.
+- Exact captured replay rechecked with the corrected deterministic evaluator: `PASS`, `0 violations`.
+- Durable evidence: `mnnz/sales/EVIDENCE.md`.
+- Replay harness corrections now cover slow event POST, transient blocking event GET polling, evaluator claim-vs-denial semantics, invented handoff detection, and UTF-8 redirected output on Windows.
+- Upstream source/core delta remains `0`.
 
 ## Next DoD
 
-1. Add the first MNNZ sales/conversation extension module using public Parlant SDK/ports only.
-2. Encode reusable sales Guidelines/Journeys as fork-owned overlay code/data, not modifications to upstream core.
-3. Add one compatibility replay that can be run both from this fork and from Ultra's `ParlantSalesPlanner`.
-4. Add a semantic-overlap section to the fork-status report for any future `PATCHES.md` entries.
+1. Run final Ruff + compile + downstream unit regressions + fork-status + `git diff --check` on the exact feature tree.
+2. DCO-commit the green sales-profile slice, ff-only merge into `dev`, push only the fork, and keep `main` unchanged.
+3. Make the same versioned JSON replay fixture consumable by Ultra's `ParlantSalesPlanner` comparison harness.
+4. Extend `scripts/mnnz_fork_status.py` with semantic-overlap output once `PATCHES.md` gains a real upstream-owned patch.
 5. Only create an upstream-core patch if a concrete missing extension point is demonstrated.

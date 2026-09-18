@@ -38,6 +38,7 @@ Maintain a thin, updateable Parlant fork where upstream stays easy to absorb and
 - MNNZ overlay now exists under `mnnz/`; no `src/parlant` file is modified by the FCM slice.
 - `mnnz/fcm` contains reproducible bootstrap/run/smoke tooling for the canonical `fcm:fast-coding` route.
 - live fork-owned FCM smoke is PASS; evidence is in `mnnz/fcm/EVIDENCE.md`.
+- accepted FCM overlay implementation commit: `d5a939c0b1615a6049643c774215f370c18acbcb`.
 - `scripts/mnnz_fork_status.py` reports exact upstream/fork SHAs, working-tree overlay, upstream-source delta and core-delta alarm.
 - upstream-core patch inventory remains empty.
 

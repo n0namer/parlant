@@ -86,6 +86,7 @@ The current phase is **Parlant-only**. The fork must become independently good a
 - Final artifact: `_bmad-output/test-artifacts/test-design-epic-sales-conversation.md`.
 - Highest risks: hallucinated business facts/capabilities (9/9), stop/no-call violation (6/9), multi-turn context loss (6/9), evaluator error (6/9), latency (6/9).
 - Quality rule: P0 = 100%; machine PASS is insufficient for newly added live dialogues without manual transcript review.
+- Accepted P0 adversarial baseline implementation commit: `d616a911e247623c8a1beb4b94501db5dc3bf70c`.
 
 ## P0 adversarial dialogue batch — 2026-09-19
 

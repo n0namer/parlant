@@ -30,18 +30,30 @@ Maintain a thin, updateable Parlant fork where upstream stays easy to absorb and
 
 ## Current checkpoint
 
-- GitHub fork created and default branch set to `main`.
-- local `main`, `dev`, `upstream/develop`, `fork/main`, and `fork/dev` were aligned at bootstrap SHA `ea737442b8ae65854a842542e544fbe7e6144bad`.
-- upstream push disabled locally.
-- inherited `fork/develop` removed to prevent confusion with MNNZ `dev`; only `upstream/develop` is tracked as the upstream development source.
-- governance docs being installed before product customization begins.
-- upstream-core patch inventory is empty.
+- GitHub fork exists and default branch is `main`.
+- `main` remains the clean upstream mirror at `ea737442b8ae65854a842542e544fbe7e6144bad`.
+- fork-governance contract is durable on `dev` at `10d5233f0707268282b27846e4298731b1e8cdf6`.
+- upstream push is disabled locally.
+- inherited `fork/develop` was removed; only `upstream/develop` is the external development source.
+- MNNZ overlay now exists under `mnnz/`; no `src/parlant` file is modified by the FCM slice.
+- `mnnz/fcm` contains reproducible bootstrap/run/smoke tooling for the canonical `fcm:fast-coding` route.
+- live fork-owned FCM smoke is PASS; evidence is in `mnnz/fcm/EVIDENCE.md`.
+- `scripts/mnnz_fork_status.py` reports exact upstream/fork SHAs, working-tree overlay, upstream-source delta and core-delta alarm.
+- upstream-core patch inventory remains empty.
+
+## Current DoD
+
+1. Keep upstream-core delta at zero for the first FCM integration slice.
+2. Prove the fork-owned FCM profile against a live Parlant runtime.
+3. Prove the anti-drift report sees both committed and uncommitted overlay files.
+4. Run lightweight downstream tests, Python compile, PowerShell parse, Ruff, fork-status and `git diff --check`.
+5. Merge the exact green feature commit into `dev` and push only the fork.
+6. Keep `main` unchanged.
 
 ## Next DoD
 
-1. Land this fork-governance documentation on `fork/dev`.
-2. Add the MNNZ extension/adapter subtree without modifying upstream core unless an extension-point gap is proven.
-3. Move/recreate Parlant-specific FCM compatibility configuration/tests from the external spike into the fork-owned extension/test area.
-4. Add an automated fork-status/semantic-overlap report script.
-5. Run upstream-native checks for touched areas.
-6. Keep `main` unchanged except during an explicit upstream-sync operation.
+1. Add the first MNNZ sales/conversation extension module using public Parlant SDK/ports only.
+2. Encode reusable sales Guidelines/Journeys as fork-owned overlay code/data, not modifications to upstream core.
+3. Add one compatibility replay that can be run both from this fork and from Ultra's `ParlantSalesPlanner`.
+4. Add a semantic-overlap section to the fork-status report for any future `PATCHES.md` entries.
+5. Only create an upstream-core patch if a concrete missing extension point is demonstrated.

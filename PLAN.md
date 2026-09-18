@@ -64,6 +64,7 @@ Maintain a thin, updateable Parlant fork where upstream stays easy to absorb and
 - Terminal-stop turn is GREEN: sale stops without resurrection.
 - Exact captured replay rechecked with the corrected deterministic evaluator: `PASS`, `0 violations`.
 - Durable evidence: `mnnz/sales/EVIDENCE.md`.
+- Accepted sales-profile implementation commit: `5c707cabcd5381be217e50e9df4ea8c66cac7520`.
 - Replay harness corrections now cover slow event POST, transient blocking event GET polling, evaluator claim-vs-denial semantics, invented handoff detection, and UTF-8 redirected output on Windows.
 - Upstream source/core delta remains `0`.
 

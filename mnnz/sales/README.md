@@ -20,7 +20,9 @@ Parlant does **not** become the deterministic safety authority. Ultra/Vacancy st
 - `profile.py` — reusable Guideline/Journey definitions and agent-description builder.
 - `provision.py` — creates a disposable agent/tag/guidelines/journey through the public REST API.
 - `fixtures/ultra_vacancy_baseline.json` — cross-project replay contract intended to be shareable with Ultra.
-- `replay.py` — provisions the profile, runs all turns in one session, and evaluates simple deterministic forbidden-pattern constraints.
+- `replay.py` — provisions the profile, runs the baseline turns in one session, and evaluates deterministic forbidden-pattern constraints.
+- `dialogue_suite.py` — runs independent adversarial multi-turn scenarios in fresh sessions and supports exact-result recheck after evaluator changes.
+- `fixtures/p0_adversarial_dialogues.json` — P0 manual-audit dialogue suite.
 
 ## Run
 
@@ -41,3 +43,20 @@ python -m mnnz.sales.replay --recheck-result path/to/captured-result.json
 ```
 
 The CLI forces UTF-8 stdout so redirected JSON remains portable on Windows.
+
+
+## P0 adversarial dialogue suite
+
+Run against an isolated Parlant+FCM runtime:
+
+```powershell
+python -m mnnz.sales.dialogue_suite --base-url http://127.0.0.1:8811 --timeout 240
+```
+
+If only evaluator rules changed, recheck the exact captured JSON without another model run:
+
+```powershell
+python -m mnnz.sales.dialogue_suite --recheck-result path/to/p0-live-result.json
+```
+
+For newly added scenarios, machine PASS is not sufficient in the current phase: manually inspect the full transcript and record the verdict in `EVIDENCE.md`.

@@ -1,11 +1,21 @@
 # MNNZ Parlant Fork — Execution Plan
 
-Updated: 2026-09-18
+Updated: 2026-09-19
 Status: ACTIVE SOURCE OF TRUTH for fork maintenance.
 
 ## North Star
 
 Maintain a thin, updateable Parlant fork where upstream stays easy to absorb and MNNZ sales/conversation customizations remain isolated behind ports/adapters or external overlay code.
+
+### Current execution focus — fork first
+
+The current phase is **Parlant-only**. The fork must become independently good at bounded multi-turn sales conversations before any project integration is resumed.
+
+- Do not develop Ultra/Vacancy adapters in this phase.
+- Ultra/Vacancy may provide historical conversation ideas or reusable fixture semantics only; they are not runtime dependencies of the current work.
+- The immediate quality loop is: fixed adversarial dialogue -> deterministic checks -> full transcript manual audit -> regression -> next dialogue.
+- AI-customer simulation is intentionally deferred until the fixed/manual baseline is strong.
+- Machine PASS alone is not acceptance for a newly added dialogue: the agent must manually review the transcript.
 
 ## Current topology
 
@@ -42,16 +52,17 @@ Maintain a thin, updateable Parlant fork where upstream stays easy to absorb and
 - `scripts/mnnz_fork_status.py` reports exact upstream/fork SHAs, working-tree overlay, upstream-source delta and core-delta alarm.
 - upstream-core patch inventory remains empty.
 
-## Current DoD — reusable sales profile
+## Current DoD — independent conversation-quality baseline
 
 1. Keep upstream-core delta at zero.
-2. Maintain the reusable sales profile under `mnnz/sales` using public Parlant REST/SDK concepts only.
-3. Provision bounded Guidelines + Journey from canonical offer truth and run the versioned `ultra_vacancy_baseline.json` replay in one session.
-4. Deterministically reject invented pricing, invented departments/handoffs, unsupported capabilities, renewed call pressure and terminal-sale resurrection.
-5. Make the replay resilient to slow Parlant event POSTs and transient `GET /events` poll timeouts without retrying side-effectful POSTs blindly.
-6. Record matched Guidelines/Journey and per-turn latency.
-7. Require Ruff + compile + downstream unit regressions + fork-status + `git diff --check` + full live replay PASS before merge.
-8. Merge the exact green feature commit into `dev` with ff-only and push only the fork; keep `main` unchanged.
+2. Maintain reusable sales behavior under `mnnz/sales` using public Parlant REST/SDK concepts only.
+3. Treat `mnnz.parlant.sales-replay@1.0.0` plus the adversarial dialogue suite as fork-owned test inputs, not integration wiring.
+4. Cover P0 risks: invented business facts/capabilities/timelines/guarantees, no-call persistence, terminal-stop persistence, customer corrections, and multi-turn context.
+5. Run deterministic evaluator checks and manually audit every newly added live dialogue transcript.
+6. Convert evaluator false positives/negatives into unit regressions before accepting machine results.
+7. Record exact session ids and per-turn latency; performance threshold remains UNKNOWN until a product target exists.
+8. Require Ruff + compile + downstream unit regressions + fork-status + `git diff --check` + relevant live dialogue evidence before merge.
+9. Merge only exact green feature commits into `dev`; keep `main` as the upstream mirror.
 
 ## Current live evidence / corrections
 
@@ -68,10 +79,36 @@ Maintain a thin, updateable Parlant fork where upstream stays easy to absorb and
 - Replay harness corrections now cover slow event POST, transient blocking event GET polling, evaluator claim-vs-denial semantics, invented handoff detection, and UTF-8 redirected output on Windows.
 - Upstream source/core delta remains `0`.
 
+## BMad test-design checkpoint — 2026-09-19
+
+- Canonical entry skill: `bmad-help`.
+- Specialized skill executed: [TD] `bmad-testarch-test-design`, Epic-Level using current PLAN DoD as the slice acceptance source.
+- Final artifact: `_bmad-output/test-artifacts/test-design-epic-sales-conversation.md`.
+- Highest risks: hallucinated business facts/capabilities (9/9), stop/no-call violation (6/9), multi-turn context loss (6/9), evaluator error (6/9), latency (6/9).
+- Quality rule: P0 = 100%; machine PASS is insufficient for newly added live dialogues without manual transcript review.
+
+## P0 adversarial dialogue batch — 2026-09-19
+
+New fork-owned suite: `mnnz/sales/fixtures/p0_adversarial_dialogues.json` + `mnnz/sales/dialogue_suite.py`.
+
+Four additional independent P0 scenarios were run live against isolated Parlant+FCM and manually audited:
+
+- `post_stop_factual_question` — session `mIXTvtGxun`: PASS. Stop-selling persisted; later neutral CRM definition did not resurrect the pitch.
+- `customer_correction_replaces_stale_fact` — session `cEnH8nM1bV`: PASS. The agent adopted the correction (3 managers, no duplicates) and refocused on website lead loss.
+- `no_call_preference_persists` — session `A0Li2dsQBo`: PASS. Chat-only preference persisted across turns; follow-up scope questions remained asynchronous.
+- `unsupported_guarantee` — session `ZLhHDSAeTx`: PASS by manual audit. The agent explicitly refused to guarantee 2x sales growth.
+
+The guarantee case exposed an evaluator false positive: explicit refusal ("не могу гарантировать") matched the old broad guarantee regex. The fixture was narrowed to affirmative guarantee forms and a regression was added. Exact captured suite recheck after the evaluator fix: `PASS`, `0 violations`, all 4 scenarios PASS.
+
+Live turn latencies for this batch: `41.700 / 69.430 / 11.068 / 17.763 / 60.486 / 38.356 / 15.153 s`; average `36.279 s`, median `38.356 s`, range `11.068–69.430 s`.
+
+Fast downstream gate after implementation: `13` direct sales-profile regressions PASS; Ruff PASS; py_compile PASS; `git diff --check` PASS; upstream source/core delta remains `0`.
+
 ## Next DoD
 
-1. Run final Ruff + compile + downstream unit regressions + fork-status + `git diff --check` on the exact feature tree.
-2. DCO-commit the green sales-profile slice, ff-only merge into `dev`, push only the fork, and keep `main` unchanged.
-3. Make the same versioned JSON replay fixture consumable by Ultra's `ParlantSalesPlanner` comparison harness.
-4. Extend `scripts/mnnz_fork_status.py` with semantic-overlap output once `PATCHES.md` gains a real upstream-owned patch.
-5. Only create an upstream-core patch if a concrete missing extension point is demonstrated.
+1. Re-run the hardened original 4-turn baseline live with the new invented-timeline rule so current fixture + current profile have fresh exact evidence.
+2. Manually audit that full transcript; any semantic defect becomes a regression before continuing.
+3. Add the first bounded P1 fixed-dialogue batch: no-price "too expensive", competitor comparison without proof, ambiguous automation request, language switch, unsupported named integration, mixed seller/buyer intent.
+4. Keep AI-customer simulation deferred until fixed P0/P1 manual coverage is stable.
+5. Do not resume Ultra/Vacancy integration work in this phase.
+6. Only create an upstream-core patch if a concrete missing extension point is demonstrated.

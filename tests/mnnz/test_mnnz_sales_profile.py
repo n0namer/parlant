@@ -10,6 +10,7 @@ from mnnz.sales.replay import evaluate_response
 
 ROOT = Path(__file__).resolve().parents[2]
 FIXTURE = ROOT / "mnnz" / "sales" / "fixtures" / "ultra_vacancy_baseline.json"
+ADVERSARIAL_FIXTURE = ROOT / "mnnz" / "sales" / "fixtures" / "p0_adversarial_dialogues.json"
 
 
 def test_that_sales_profile_has_unique_stable_guideline_keys() -> None:
@@ -179,3 +180,71 @@ def test_that_replay_uses_cli_timeout_for_customer_event_post() -> None:
 
     assert result["status"] == "PASS"
     assert seen_timeouts == [91.0]
+
+
+def test_that_problem_first_fixture_rejects_invented_timeline() -> None:
+    fixture = json.loads(FIXTURE.read_text(encoding="utf-8"))
+    turn = next(item for item in fixture["turns"] if item["id"] == "problem_first")
+    assert evaluate_response("Это делается за 15–20 минут.", turn)
+    assert evaluate_response("Срок зависит от текущей настройки amoCRM.", turn) == []
+
+
+def test_that_p0_adversarial_fixture_has_independent_risk_scenarios() -> None:
+    fixture = json.loads(ADVERSARIAL_FIXTURE.read_text(encoding="utf-8"))
+    assert fixture["schema"] == "mnnz.parlant.dialogue-suite"
+    assert fixture["schema_version"] == "1.0.0"
+    scenarios = {item["id"]: item for item in fixture["scenarios"]}
+    assert {
+        "post_stop_factual_question",
+        "customer_correction_replaces_stale_fact",
+        "no_call_preference_persists",
+        "unsupported_guarantee",
+    }.issubset(scenarios)
+    assert all(item["priority"] == "P0" for item in scenarios.values())
+    assert all(item["turns"] for item in scenarios.values())
+
+
+def test_that_guarantee_evaluator_distinguishes_refusal_from_promise() -> None:
+    fixture = json.loads(ADVERSARIAL_FIXTURE.read_text(encoding="utf-8"))
+    scenario = next(item for item in fixture["scenarios"] if item["id"] == "unsupported_guarantee")
+    turn = scenario["turns"][0]
+    from mnnz.sales.dialogue_suite import evaluate_turn
+
+    assert (
+        evaluate_turn(
+            "Я не могу гарантировать, что продажи вырастут в два раза.",
+            turn,
+        )
+        == []
+    )
+    assert evaluate_turn(
+        "Мы гарантируем, что продажи вырастут в два раза.",
+        turn,
+    )
+
+
+def test_that_adversarial_suite_recheck_recomputes_false_positive() -> None:
+    fixture = json.loads(ADVERSARIAL_FIXTURE.read_text(encoding="utf-8"))
+    from mnnz.sales.dialogue_suite import recheck_captured_suite
+
+    captured = {
+        "status": "FAIL",
+        "violations": ["stale"],
+        "scenarios": [
+            {
+                "id": "unsupported_guarantee",
+                "status": "FAIL",
+                "turns": [
+                    {
+                        "turn": 1,
+                        "message": "Я не могу гарантировать, что продажи вырастут минимум в два раза.",
+                        "violations": ["stale"],
+                    }
+                ],
+            }
+        ],
+    }
+    rechecked = recheck_captured_suite(fixture, captured)
+    assert rechecked["status"] == "PASS"
+    assert rechecked["violations"] == []
+    assert rechecked["scenarios"][0]["status"] == "PASS"

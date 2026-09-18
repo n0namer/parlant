@@ -1,3 +1,8 @@
+> [!IMPORTANT]
+> **MNNZ maintained fork.** This repository tracks `emcie-co/parlant` with a thin downstream overlay.
+> Before making changes, read **[AGENTS.md](AGENTS.md)**, **[UPSTREAM.md](UPSTREAM.md)**, **[PATCHES.md](PATCHES.md)**, and **[PLAN.md](PLAN.md)**.
+> `main` is the upstream mirror; MNNZ work belongs on `dev` / short `feature/*` branches. Do not push to upstream.
+
 <div align="center">
 
 <picture>

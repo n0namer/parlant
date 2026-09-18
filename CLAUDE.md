@@ -1,3 +1,19 @@
+# MNNZ fork-specific instructions
+
+This checkout is the maintained fork `n0namer/parlant`, not a direct upstream checkout.
+
+**Before any change, read `AGENTS.md`, `UPSTREAM.md`, `PATCHES.md`, and `PLAN.md`.**
+Fork-maintenance rules in those files override any ambiguous branch/source-ownership implication below.
+
+Critical branch rules:
+- `main` = clean/near-exact mirror of `emcie-co/parlant:develop`;
+- `dev` = durable MNNZ integration branch;
+- product work goes to `dev` or short `feature/*` branches from `dev`;
+- upstream push is forbidden;
+- upstream upgrades follow Source Loop Profile U in `UPSTREAM.md`;
+- a conflict-free rebase/merge is not semantic acceptance;
+- prefer ports/adapters/extensions to upstream-core edits; register every unavoidable core patch in `PATCHES.md`.
+
 This is the main repo of Parlant (https://parlant.io).
 
 Parlant is a Python based agent framework. Its core strengths:

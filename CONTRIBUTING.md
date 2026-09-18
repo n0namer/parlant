@@ -1,3 +1,5 @@
+> **Fork contributors:** this fork has additional branch/upstream rules. Read [AGENTS.md](AGENTS.md), [UPSTREAM.md](UPSTREAM.md), and [PATCHES.md](PATCHES.md) before committing. MNNZ product changes do not go directly to `main`.
+
 # DCO Sign Off
 
 All commits must be signed off with the Developer Certificate of Origin ([DCO.md](DCO.md)).

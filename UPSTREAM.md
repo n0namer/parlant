@@ -24,6 +24,13 @@ Source authority:
 - our durable customization authority = fork `dev`;
 - runtime/container state = observed working state, never durable truth by itself.
 
+Canonical SourceLoop lifecycle ownership:
+- cross-service architecture/bootstrap contract: `n0namer/server-ops/SOURCELOOP.md`, Profile U;
+- machine-readable lifecycle: `n0namer/server-ops/ops/registry.json` objects `parlant-upstream` and `parlant-fork-dev`;
+- cross-service lifecycle card: `n0namer/server-ops/services/parlant-fork.md`;
+- this repository remains authoritative for fork-local patch inventory (`PATCHES.md`), upgrade procedure (this file), product execution (`PLAN.md`) and acceptance evidence;
+- local Windows Parlant instances are test evidence only; no canonical deployed Parlant runtime is currently registered or implied.
+
 ## 2. Why this model exists
 
 The fork must remain cheap to update. The MNNZ delta is treated as a bounded overlay, not a divergent product tree.

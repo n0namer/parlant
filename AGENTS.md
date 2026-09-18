@@ -42,6 +42,13 @@ n0namer/parlant:dev       # our durable integration branch
 
 This fork follows the Source Loop upstream-managed-fork model.
 
+Canonical cross-service SourceLoop ownership lives in `n0namer/server-ops`:
+- contract: `SOURCELOOP.md`, Profile U;
+- machine-readable lifecycle: `ops/registry.json` objects `parlant-upstream` and `parlant-fork-dev`;
+- lifecycle card: `services/parlant-fork.md`.
+
+Do not create a second lifecycle state file in this repository. Keep fork-local truth here (`UPSTREAM.md`, `PATCHES.md`, `PLAN.md`, tests/evidence), and keep cross-service immutable lifecycle identity in the canonical server-ops owner.
+
 Before every upstream update, resolve exact immutable refs:
 
 - `last_accepted_upstream_sha`

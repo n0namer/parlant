@@ -51,6 +51,9 @@ The current phase is **Parlant-only**. The fork must become independently good a
 - accepted FCM overlay implementation commit: `d5a939c0b1615a6049643c774215f370c18acbcb`.
 - `scripts/mnnz_fork_status.py` reports exact upstream/fork SHAs, working-tree overlay, upstream-source delta and core-delta alarm.
 - upstream-core patch inventory remains empty.
+- SourceLoop Profile U cross-service lifecycle is now registered in canonical `n0namer/server-ops`: registry objects `parlant-upstream` + `parlant-fork-dev`, service card `services/parlant-fork.md`.
+- SourceLoop doctor evidence at registration: upstream lifecycle PASS (`upstream/develop == fork/main`; accepted `dev` is 7 commits ahead), accepted fork SHA PASS.
+- No canonical deployed Parlant runtime is registered yet; local Windows instances remain test evidence only and must not be treated as deployment provenance.
 
 ## Current DoD — independent conversation-quality baseline
 

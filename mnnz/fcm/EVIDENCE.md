@@ -51,3 +51,19 @@ PASS means:
 - this integration did not require modifying `src/parlant`.
 
 It does **not** mean Parlant replaces Ultra/Vacancy deterministic safety. That boundary remains external and is documented in `AGENTS.md` / `PLAN.md`.
+
+
+## Canonical fork-runtime provenance check — 2026-09-19
+
+A fresh acceptance runtime was launched from the fork-owned editable environment:
+
+- checkout: `D:\Users\NIKITA\Documents\DEV\parlant-mnnz`
+- environment: `.venv-mnnz-fcm`
+- resolved adapter source: `D:\Users\NIKITA\Documents\DEV\parlant-mnnz\src\parlant\adapters\nlp\litellm_service.py`
+- isolated home: `.parlant-data\fork-acceptance-20260919-1316c`
+- port: `127.0.0.1:8811`
+- model route: `openai/fcm:fast-coding`
+- initial fresh instance id: `gvgLYH6YaH`
+- initial engine/NLP sample counts before replay: `0`
+
+This corrects an earlier verification ambiguity where port 8811 had been occupied by a reused runtime. Acceptance evidence must bind runtime source path + fresh home + exact session, not port number alone.

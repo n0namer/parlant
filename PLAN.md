@@ -69,7 +69,7 @@ The current phase is **Parlant-only**. The fork must become independently good a
 
 ## Current live evidence / corrections
 
-- Seven sales Guidelines + one Journey provision successfully through public APIs; no `src/parlant` modification is required.
+- Eight sales Guidelines + one Journey provision successfully through public APIs; no `src/parlant` modification is required.
 - Accepted live session: `bO1hJ35eva`.
 - Exact captured turn latencies: `113.705 / 27.140 / 86.791 / 56.265 s`.
 - Strengthened unknown-pricing behavior is GREEN: no invented price, no invented sales-team handoff, one asynchronous scope question.
@@ -108,11 +108,25 @@ Live turn latencies for this batch: `41.700 / 69.430 / 11.068 / 17.763 / 60.486 
 
 Fast downstream gate after implementation: `13` direct sales-profile regressions PASS; Ruff PASS; py_compile PASS; `git diff --check` PASS; upstream source/core delta remains `0`.
 
+## Fresh fork-runtime baseline checkpoint — 2026-09-19
+
+- Runtime provenance is explicit: `.venv-mnnz-fcm` resolves Parlant into this checkout's `src/parlant`; acceptance no longer relies on port identity alone.
+- Fresh isolated home: `.parlant-data/fork-acceptance-20260919-1316c`; initial instance id `gvgLYH6YaH`.
+- Accepted hardened baseline session: `YFDQLI2SA6`.
+- Machine result: `PASS`, `0 violations`; manual transcript audit: `PASS`.
+- Turn latencies: `58.501 / 39.475 / 46.864 / 44.038 s`; average `47.219 s`, median `45.451 s`.
+- Manual review rejected earlier machine-green behavior and produced hard regressions for evasive unsupported-capability answers, invented effort/complexity, invented third-party platform behavior and guaranteed outcome claims.
+- `capability_grounding` now requires a direct negative for each explicitly requested unsupported capability.
+- `external_platform_grounding` prevents unsupported claims about named third-party platform features/settings/APIs/rules.
+- Runtime compatibility fixes: PowerShell uses `-ParlantHome`; fresh runner uses `--migrate`; Journey API uses `triggers` consistently.
+- Upstream core delta target remains zero.
+
 ## Next DoD
 
-1. Re-run the hardened original 4-turn baseline live with the new invented-timeline rule so current fixture + current profile have fresh exact evidence.
-2. Manually audit that full transcript; any semantic defect becomes a regression before continuing.
-3. Add the first bounded P1 fixed-dialogue batch: no-price "too expensive", competitor comparison without proof, ambiguous automation request, language switch, unsupported named integration, mixed seller/buyer intent.
-4. Keep AI-customer simulation deferred until fixed P0/P1 manual coverage is stable.
-5. Do not resume Ultra/Vacancy integration work in this phase.
-6. Only create an upstream-core patch if a concrete missing extension point is demonstrated.
+1. Add and run the first bounded P1 fixed-dialogue batch: no-price "too expensive", competitor comparison without proof, ambiguous automation request, RU→EN language switch, unsupported named integration, mixed seller/buyer intent.
+2. Manually audit every P1 transcript; machine PASS alone is not acceptance.
+3. Convert every material semantic defect or evaluator defect into a deterministic regression where feasible.
+4. Record per-turn latency and compare with the accepted P0 baseline; do not invent an SLA.
+5. Keep AI-customer simulation deferred until fixed P0/P1 manual coverage is stable.
+6. Do not resume Ultra/Vacancy integration work in this phase.
+7. Only create an upstream-core patch if a concrete missing extension point is demonstrated.

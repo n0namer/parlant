@@ -39,7 +39,7 @@ This creates `.venv-mnnz-fcm` and installs this fork editable with the upstream 
 Useful overrides:
 
 ```powershell
-./mnnz/fcm/run.ps1 -Port 8811 -Home ".parlant-data/my-isolated-run"
+./mnnz/fcm/run.ps1 -Port 8811 -ParlantHome ".parlant-data/my-isolated-run"
 ```
 
 Every concurrent test/runtime must use a unique `PARLANT_HOME`. Reusing a scratch home across agents/tests caused misleading session/config collisions in the spike.

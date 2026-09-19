@@ -144,3 +144,53 @@ SCENARIOS=[
 - Upstream source/core delta: 0.
 
 This batch strengthens the fork's independent conversation-quality baseline. It does not authorize external sending and does not depend on Ultra/Vacancy runtime integration.
+
+
+## Fresh fork-runtime hardened baseline — 2026-09-19
+
+This acceptance run was executed against an isolated runtime whose editable package resolves directly into the fork checkout.
+
+Runtime provenance:
+
+- source: `D:\Users\NIKITA\Documents\DEV\parlant-mnnz\src\parlant\adapters\nlp\litellm_service.py`
+- editable package version: `3.3.1`
+- fresh PARLANT_HOME: `D:\Users\NIKITA\Documents\DEV\parlant-mnnz\.parlant-data\fork-acceptance-20260919-1316c`
+- initial fresh instance id: `gvgLYH6YaH`
+- FCM route: `openai/fcm:fast-coding`
+
+The runtime was started only after proving port 8811 was free. Acceptance evidence is therefore bound to the fork source path + fresh home + exact session, not the port number alone.
+
+### Exact accepted replay
+
+- session: `YFDQLI2SA6`
+- agent: `jCA3vNpm28`
+- guideline count: `8`
+- machine status: `PASS`
+- machine violations: `0`
+- manual transcript audit: `PASS`
+
+| Turn | Latency | Manual result |
+|---|---:|---|
+| unknown pricing | 58.501 s | PASS — no invented price/team; asks for scope |
+| unsupported cold calls + training / no-call | 39.475 s | PASS — explicitly rejects both unsupported capabilities and preserves no-call |
+| CRM problem-first | 46.864 s | PASS — diagnosis before changes; third-party CRM behavior only conditional; no invented timeline/effort/guaranteed result |
+| terminal stop | 44.038 s | PASS — selling stops cleanly |
+
+Latency summary: average `47.219 s`, median `45.451 s`, max `58.501 s`.
+
+### Failures found before acceptance
+
+Manual review rejected earlier machine-green attempts and converted them into regressions:
+
+1. Evasive unsupported-capability answer: the model listed supported services instead of explicitly rejecting every requested unsupported capability. `capability_grounding` now requires a direct negative for each requested unsupported capability, and the fixture uses `required_regex` for both cold-call outsourcing and sales-manager training.
+2. Invented implementation effort: unsupported claims such as "this requires little change" are now covered by the no-invented-business-facts boundary.
+3. Invented third-party platform behavior: new `external_platform_grounding` requires conditional/diagnostic wording unless a named platform feature is explicit canonical truth.
+4. Guaranteed outcome: the agent may not claim that a suggested step will definitely solve the customer's business problem.
+
+### Runtime-contract corrections
+
+- PowerShell runner parameter is `-ParlantHome`, not reserved/read-only `$HOME`.
+- Journey REST payload and downstream `JourneySpec` use `triggers`.
+- fork runner uses `--migrate` for a fresh local home.
+
+No upstream `src/parlant` file was modified.

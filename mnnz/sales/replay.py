@@ -71,6 +71,9 @@ def evaluate_response(text: str, turn: dict[str, Any]) -> list[str]:
     for pattern in turn.get("forbidden_regex", []):
         if re.search(pattern, text):
             violations.append(f"forbidden_regex:{pattern}")
+    for pattern in turn.get("required_regex", []):
+        if not re.search(pattern, text):
+            violations.append(f"missing_required_regex:{pattern}")
     return violations
 
 

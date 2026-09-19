@@ -39,3 +39,17 @@ def test_that_fcm_profile_does_not_modify_upstream_source() -> None:
         ROOT / "mnnz" / "fcm" / "smoke.py",
     ]
     assert all(path.exists() for path in expected)
+
+
+def test_that_fcm_runner_avoids_reserved_powershell_home_variable() -> None:
+    runner = (ROOT / "mnnz" / "fcm" / "run.ps1").read_text(encoding="utf-8")
+    assert "[string]$ParlantHome" in runner
+    assert "[string]$Home" not in runner
+    assert "$env:PARLANT_HOME = $ParlantHome" in runner
+    assert "--migrate" in runner
+
+
+def test_that_fcm_readme_uses_non_reserved_runner_parameter() -> None:
+    readme = (ROOT / "mnnz" / "fcm" / "README.md").read_text(encoding="utf-8")
+    assert "-ParlantHome" in readme
+    assert "-Home " not in readme

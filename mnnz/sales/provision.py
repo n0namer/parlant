@@ -51,7 +51,7 @@ def provision(
         "/journeys",
         {
             "title": JOURNEY.title,
-            "conditions": list(JOURNEY.conditions),
+            "triggers": list(JOURNEY.triggers),
             "description": JOURNEY.description,
             "tags": [tag_id],
             "priority": JOURNEY.priority,

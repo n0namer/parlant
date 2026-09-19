@@ -58,8 +58,13 @@ def test_that_replay_evaluator_distinguishes_claim_from_explicit_denial() -> Non
     fixture = json.loads(FIXTURE.read_text(encoding="utf-8"))
     turn = fixture["turns"][1]
     assert evaluate_response("Да, можем взять холодный обзвон на себя.", turn)
-    assert evaluate_response("Мы не можем делать холодные звонки за вас.", turn) == []
-    assert evaluate_response("Мы не можем обучать ваших менеджеров продавать.", turn) == []
+    assert (
+        evaluate_response(
+            "Мы не можем делать холодные звонки за вас и не можем обучать ваших менеджеров продавать.",
+            turn,
+        )
+        == []
+    )
 
 
 def test_that_fixture_rejects_invented_sales_department_handoff() -> None:
@@ -248,3 +253,124 @@ def test_that_adversarial_suite_recheck_recomputes_false_positive() -> None:
     assert rechecked["status"] == "PASS"
     assert rechecked["violations"] == []
     assert rechecked["scenarios"][0]["status"] == "PASS"
+
+
+def test_that_unsupported_capability_turn_requires_explicit_declines() -> None:
+    fixture = json.loads(FIXTURE.read_text(encoding="utf-8"))
+    turn = next(
+        item for item in fixture["turns"] if item["id"] == "unsupported_capability_and_no_call"
+    )
+    evasive = (
+        "Да, мы можем помочь с интеграцией amoCRM, автоматизацией процессов, "
+        "аналитикой и AI-ассистентами для продаж."
+    )
+    explicit = (
+        "Холодные звонки за вас мы не делаем и обучение менеджеров продажам "
+        "не предоставляем. Можем помочь с CRM, автоматизацией, аналитикой и AI-ассистентами."
+    )
+    assert any(
+        value.startswith("missing_required_regex:") for value in evaluate_response(evasive, turn)
+    )
+    assert evaluate_response(explicit, turn) == []
+
+
+def test_that_capability_guideline_requires_direct_negative_before_alternatives() -> None:
+    guideline = next(item for item in GUIDELINES if item.key == "capability_grounding")
+    action = guideline.action.lower()
+    assert "directly" in action
+    assert "do not provide/do it" in action
+    assert "do not dodge" in action
+
+
+def test_that_problem_first_fixture_rejects_invented_effort_or_complexity() -> None:
+    fixture = json.loads(FIXTURE.read_text(encoding="utf-8"))
+    turn = next(item for item in fixture["turns"] if item["id"] == "problem_first")
+    assert evaluate_response(
+        "Это не потребует больших изменений — только настройка отчёта.",
+        turn,
+    )
+    assert (
+        evaluate_response(
+            "Первым шагом можно проверить маршрутизацию заявок и отчёт по обработке.",
+            turn,
+        )
+        == []
+    )
+
+
+def test_that_profile_forbids_invented_effort_complexity_estimates() -> None:
+    guideline = next(item for item in GUIDELINES if item.key == "no_invented_business_facts")
+    condition = guideline.condition.lower()
+    assert "effort" in condition
+    assert "complexity" in condition
+    assert "implementation scope" in condition
+
+
+def test_that_problem_first_fixture_rejects_invented_platform_feature_and_guaranteed_fix() -> None:
+    fixture = json.loads(FIXTURE.read_text(encoding="utf-8"))
+    turn = next(item for item in fixture["turns"] if item["id"] == "problem_first")
+    assert evaluate_response(
+        "Дубли можно убрать правилом автоматического объединения по email или телефону.",
+        turn,
+    )
+    assert evaluate_response(
+        "Это минимальный шаг, который решит вашу проблему с потерями и дублями.",
+        turn,
+    )
+    assert (
+        evaluate_response(
+            "Первым шагом проверьте маршрутизацию, источник и ответственного по потерянным заявкам.",
+            turn,
+        )
+        == []
+    )
+
+
+def test_that_profile_has_external_platform_grounding_guideline() -> None:
+    guideline = next(item for item in GUIDELINES if item.key == "external_platform_grounding")
+    text = f"{guideline.condition} {guideline.action}".lower()
+    assert "third-party platform" in text
+    assert "do not assert" in text
+    assert "conditional wording" in text
+
+
+def test_that_provision_uses_current_journey_triggers_api() -> None:
+    from mnnz.sales import provision as provision_module
+
+    calls: list[tuple[str, dict[str, object] | None]] = []
+    original_request_json = provision_module.request_json
+
+    def fake_request_json(base_url, path, payload=None, timeout_s=30.0):
+        assert base_url == "http://test"
+        calls.append((path, payload))
+        if path == "/tags":
+            return {"id": "tag-1"}
+        if path == "/agents":
+            return {"id": "agent-1"}
+        if path == "/guidelines":
+            return {"id": f"guideline-{len(calls)}"}
+        if path == "/journeys":
+            return {"id": "journey-1"}
+        raise AssertionError(path)
+
+    try:
+        provision_module.request_json = fake_request_json
+        result = provision_module.provision(
+            "http://test",
+            "CRM integration only",
+            ["CRM integration"],
+            "Test",
+        )
+    finally:
+        provision_module.request_json = original_request_json
+
+    journey_payload = next(payload for path, payload in calls if path == "/journeys")
+    assert journey_payload is not None
+    assert journey_payload["triggers"] == list(JOURNEY.triggers)
+    assert "conditions" not in journey_payload
+    assert result["journey_id"] == "journey-1"
+
+
+def test_that_journey_uses_public_triggers_contract() -> None:
+    assert JOURNEY.triggers
+    assert "interest" in JOURNEY.triggers[0].lower()
